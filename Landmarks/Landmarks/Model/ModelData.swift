@@ -22,6 +22,8 @@ class ModelData {
     var features: [Landmark] {
         landmarks.filter { $0.isFeatured }
     }
+    
+    var profile = Profile.default
 }
 
 func load<T: Decodable>(_ filename: String) -> T {
