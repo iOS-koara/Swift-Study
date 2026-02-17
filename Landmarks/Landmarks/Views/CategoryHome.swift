@@ -8,10 +8,17 @@
 import SwiftUI
 
 struct CategoryHome: View {
+    
+    @Environment(ModelData.self) var modelData
+    
     var body: some View {
         NavigationSplitView {
-            Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-                .navigationTitle("Featured")
+            List {
+                ForEach(modelData.categroies.keys.sorted(), id: \.self) { key in
+                    Text(key)
+                }
+            }
+            .navigationTitle("Featured")
         } detail: {
             Text("Select a Landmark")
         }
@@ -20,4 +27,5 @@ struct CategoryHome: View {
 
 #Preview {
     CategoryHome()
+        .environment(ModelData())
 }
