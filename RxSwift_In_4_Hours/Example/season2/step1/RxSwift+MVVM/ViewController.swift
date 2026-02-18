@@ -38,15 +38,17 @@ class ViewController: UIViewController {
 
     @IBAction func onLoad() {
         editView.text = ""
+        self.setVisibleWithAnimation(self.activityIndicator, true)
         DispatchQueue.global().async {
-            self.setVisibleWithAnimation(self.activityIndicator, true)
 
             let url = URL(string: MEMBER_LIST_URL)!
             let data = try! Data(contentsOf: url)
             let json = String(data: data, encoding: .utf8)
-            self.editView.text = json
-            
-            self.setVisibleWithAnimation(self.activityIndicator, false)
+            DispatchQueue.main.async {
+                self.editView.text = json
+                
+                self.setVisibleWithAnimation(self.activityIndicator, false)
+            }
         }
     }
 }
