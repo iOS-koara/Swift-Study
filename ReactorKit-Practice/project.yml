@@ -1,0 +1,18 @@
+name: ReactorKit-Practice
+options:
+  bundleIdPrefix: com.practice
+  deploymentTarget:
+    iOS: "15.0"
+targets:
+  ReactorKit-Practice:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+    resources:
+      - Resources
+    info:
+      path: Resources/Info.plist
+    settings:
+      base:
+        INFOPLIST_FILE: Resources/Info.plist
