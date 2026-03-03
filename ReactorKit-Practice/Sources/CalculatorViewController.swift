@@ -1,8 +1,14 @@
 import UIKit
+import RxSwift
+import RxCocoa
 
 final class CalculatorViewController: UIViewController {
 
-    private var value: Int = 0
+    private let disposeBag = DisposeBag()
+    
+    //- Publish vs Behavior → 초기값 0이 필요하니까 Behavior
+    //- Subject vs Relay → UI 상태는 에러/완료로 끊기면 안 되니까 Relay
+    private let valueRelay = BehaviorRelay<Int>(value: 0)
 
     // MARK: - UI
 
@@ -41,7 +47,7 @@ final class CalculatorViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupLayout()
-        setupActions()
+        bind()
     }
 
     private func setupLayout() {
@@ -66,26 +72,27 @@ final class CalculatorViewController: UIViewController {
         ])
     }
 
-    private func setupActions() {
-        increaseButton.addTarget(self, action: #selector(increaseTapped), for: .touchUpInside)
-        decreaseButton.addTarget(self, action: #selector(decreaseTapped), for: .touchUpInside)
-        multiplyButton.addTarget(self, action: #selector(multiplyTapped), for: .touchUpInside)
-    }
+    // MARK: - Bind
 
-    // MARK: - Actions
+    private func bind() {
+        increaseButton.rx.tap
+            .map { [weak self] in (self?.valueRelay.value ?? 0) + 1 }
+            .bind(to: valueRelay)
+            .disposed(by: disposeBag)
 
-    @objc private func increaseTapped() {
-        value += 1
-        valueLabel.text = "\(value)"
-    }
+        decreaseButton.rx.tap
+            .map { [weak self] in (self?.valueRelay.value ?? 0) - 1 }
+            .bind(to: valueRelay)
+            .disposed(by: disposeBag)
 
-    @objc private func decreaseTapped() {
-        value -= 1
-        valueLabel.text = "\(value)"
-    }
-
-    @objc private func multiplyTapped() {
-        value *= 2
-        valueLabel.text = "\(value)"
+        multiplyButton.rx.tap
+            .map { [weak self] in (self?.valueRelay.value ?? 0) * 2 }
+            .bind(to: valueRelay)
+            .disposed(by: disposeBag)
+        
+        valueRelay
+            .map { "\($0)" }
+            .bind(to: valueLabel.rx.text)
+            .disposed(by: disposeBag)
     }
 }

@@ -3,6 +3,10 @@ options:
   bundleIdPrefix: com.practice
   deploymentTarget:
     iOS: "15.0"
+packages:
+  RxSwift:
+    url: https://github.com/ReactiveX/RxSwift.git
+    from: "6.5.0"
 targets:
   ReactorKit-Practice:
     type: application
@@ -13,6 +17,11 @@ targets:
       - Resources
     info:
       path: Resources/Info.plist
+    dependencies:
+      - package: RxSwift
+        product: RxSwift
+      - package: RxSwift
+        product: RxCocoa
     settings:
       base:
         INFOPLIST_FILE: Resources/Info.plist
